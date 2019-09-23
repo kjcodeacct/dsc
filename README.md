@@ -1,8 +1,4 @@
-# DSC
-## database schema control
-dsc does * not * replace git (hg, svn, etc) for tracking file changes
-
-![dsc logo](./assets/logo.png)
+![DSC - database schema control](./assets/logo.png)
 
 # Table of Contents
 
