@@ -1,0 +1,14 @@
+type: postgres
+version: 10.1
+alias: example_db
+remoteList:
+  default:
+    address: 127.0.0.1
+    port: 5432
+    user: user
+    password: password
+  production:
+    address: 127.0.0.1
+    port: 5432
+    user: user
+    password: password
