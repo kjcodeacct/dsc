@@ -1,0 +1,9 @@
+CREATE TABLE schema_changelog
+(
+	id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+	sha256 TEXT NOT NULL,
+	file TEXT NOT NULL,
+	epoch INTEGER,
+	author_name TEXT NOT NULL,
+	author_email TEXT NOT NULL
+);
