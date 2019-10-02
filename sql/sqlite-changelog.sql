@@ -3,7 +3,15 @@ CREATE TABLE schema_changelog
 	id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
 	sha256 TEXT NOT NULL,
 	file TEXT NOT NULL,
-	epoch INTEGER,
+	epoch INTEGER NOT NULL,
+	applied_at_epoch INTEGER,
 	author_name TEXT NOT NULL,
 	author_email TEXT NOT NULL
+);
+
+CREATE TABLE dsc_config
+(
+	id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+	type TEXT NOT NULL,
+	alias TEXT NOT NULL
 );

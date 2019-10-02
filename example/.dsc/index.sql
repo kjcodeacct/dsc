@@ -1,8 +1,0 @@
-CREATE TABLE tracked_files
-(
-	id INTEGER NOT NULL,
-	filepath TEXT NOT NULL,
-	sha256 TEXT NOT NULL,
-	commit_date TIMESTAMP WITHOUT TIMEZONE,
-	author TEXT NOT NULL
-);
