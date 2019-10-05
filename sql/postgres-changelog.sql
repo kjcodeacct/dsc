@@ -21,7 +21,7 @@ CREATE TABLE dsc_change_file
 
 CREATE UNIQUE INDEX ON dsc_change_files(file);
 
-CREATE TABLE dsc_reference_log
+CREATE TABLE dsc_temporal_log
 (
 	id SERIAL PRIMARY KEY,
 	dsc_change_file_id INTEGER NOT NULL REFERENCES dsc_change_file(id),
