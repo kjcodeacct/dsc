@@ -17,7 +17,9 @@ limitations under the License.
 package cmd
 
 import (
+	"dsc/fancy_errors"
 	"fmt"
+	"os"
 
 	"github.com/spf13/cobra"
 )
@@ -30,21 +32,48 @@ var initCmd = &cobra.Command{
 logging information, history, server configurations, etc.
 `,
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("init")
+		InitializeWorkingDirectory()
 	},
 }
 
+var internalPackageDir packr.Box
+
 func init() {
 	rootCmd.AddCommand(initCmd)
+	initCmd.Flags().String("dir", "", "specify working directory ")
 
-	// Here you will define your flags and configuration settings.
+	internalPackageDir := packr.NewBox("../templates")
 
-	// Cobra supports Persistent Flags which will work for this command
-	// and all subcommands, e.g.:
-	// initCmd.PersistentFlags().String("foo", "", "A help for foo")
+}
 
-	// Cobra supports local flags which will only run when this command
-	// is called directly, e.g.:
-	// initCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
-	initCmd.Flags().BoolP("dir", "", "specify working directory ")
+func InitializeWorkingDirectory() {
+
+	workingDir, _ := initCmd.Flags().GetString("dir")
+	if workingDir == "" {
+		localDir, err := os.Getwd()
+		if err != nil {
+			fmt.Fatalln(err)
+		}
+
+		workingDir = localDir
+	}
+
+	err := createWorkingDirectory(workingDir)
+	if err != nil {
+		fmt.Fatalln()
+	}
+
+	fmt.Printf("initialized empty dsc working directory in %s", workingDir)
+}
+
+func createWorkingDirectory(workingDir string) error {
+
+	_, err := os.Stat(workingDir)
+	if os.IsNotExist(err) {
+		os.Mkdir(workingDir, 0644)
+		// copy dsc.db from internalPackageDir
+	} else {
+		return fancy_errors.New("dsc working directory already exsits")
+	}
+
 }
