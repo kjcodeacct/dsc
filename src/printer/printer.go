@@ -39,6 +39,21 @@ func Green(args ...interface{}) {
 	fmt.Fprint(printWriter, aurora.Green(args))
 }
 
+func Fatalln(args ...interface{}) {
+	args = append(args, newLine)
+	fmt.Fprint(printWriter, aurora.Red(args), newLine)
+	panic(args)
+}
+
+func Printf(format string, args ...interface{}) {
+	fmt.Fprintf(printWriter, format, args)
+}
+
+func Println(format string, args ...interface{}) {
+	args = append(args, newLine)
+	fmt.Fprintf(printWriter, format, args)
+}
+
 func AddedFiles(files []string) {
 
 }

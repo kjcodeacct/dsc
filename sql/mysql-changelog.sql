@@ -16,10 +16,12 @@ CREATE TABLE dsc_change_file
 (
 	id SERIAL PRIMARY KEY,
 	file TEXT NOT NULL,
+	sha256 TEXT NOT NULL,
 	created_at INTEGER NOT NULL
 );
 
 CREATE UNIQUE INDEX ON dsc_change_files(file);
+CREATE UNIQUE INDEX ON dsc_change_files(file, sha256);
 
 CREATE TABLE dsc_temporal_log
 (

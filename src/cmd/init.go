@@ -17,9 +17,10 @@ limitations under the License.
 package cmd
 
 import (
-	"dsc/fancy_errors"
-	"fmt"
+	errors "dsc/fancy_errors"
+	"dsc/printer"
 	"os"
+	"path/filepath"
 
 	"github.com/spf13/cobra"
 )
@@ -36,34 +37,33 @@ logging information, history, server configurations, etc.
 	},
 }
 
-var internalPackageDir packr.Box
+var workingDir string
 
 func init() {
 	rootCmd.AddCommand(initCmd)
 	initCmd.Flags().String("dir", "", "specify working directory ")
-
-	internalPackageDir := packr.NewBox("../templates")
-
+	workingDir, _ = initCmd.Flags().GetString("dir")
 }
 
 func InitializeWorkingDirectory() {
 
-	workingDir, _ := initCmd.Flags().GetString("dir")
 	if workingDir == "" {
 		localDir, err := os.Getwd()
 		if err != nil {
-			fmt.Fatalln(err)
+			printer.Fatalln(errors.Wrap(err))
 		}
 
 		workingDir = localDir
 	}
 
+	workingDir = filepath.Join(workingDir, ".dsc")
+
 	err := createWorkingDirectory(workingDir)
 	if err != nil {
-		fmt.Fatalln()
+		printer.Fatalln(errors.Wrap(err))
 	}
 
-	fmt.Printf("initialized empty dsc working directory in %s", workingDir)
+	printer.Println("initialized empty dsc working directory in %s", workingDir)
 }
 
 func createWorkingDirectory(workingDir string) error {
@@ -72,8 +72,13 @@ func createWorkingDirectory(workingDir string) error {
 	if os.IsNotExist(err) {
 		os.Mkdir(workingDir, 0644)
 		// copy dsc.db from internalPackageDir
+		_, err := os.Create("index.db")
+		if err != nil {
+			printer.Fatalln(errors.Wrap(err))
+		}
 	} else {
-		return fancy_errors.New("dsc working directory already exsits")
+		return errors.New("dsc working directory already exsits")
 	}
 
+	return nil
 }
