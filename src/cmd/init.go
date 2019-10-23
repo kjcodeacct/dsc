@@ -29,7 +29,7 @@ import (
 var initCmd = &cobra.Command{
 	Use:   "init",
 	Short: "Initialize a working dsc directory.",
-	Long: `Init will initialize and create a working .dsc subdirectory to store compressed commits,
+	Long: `'init' will initialize and create a working .dsc subdirectory to store compressed commits,
 logging information, history, server configurations, etc.
 `,
 	Run: func(cmd *cobra.Command, args []string) {
