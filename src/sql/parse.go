@@ -4,6 +4,7 @@ import (
 	"bufio"
 	"dsc/fancy_errors"
 	"strings"
+	"time"
 	"unicode"
 )
 
@@ -16,6 +17,8 @@ type Query struct {
 	Content   string
 	LineStart int
 	LineEnd   int
+	StartTime time.Time
+	EndTime   time.Time
 }
 
 /*
