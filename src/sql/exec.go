@@ -6,7 +6,7 @@ import (
 	"time"
 )
 
-func ApplyChangeSet(changeSet map[int][]Query) error {
+func ApplyChangeSet(changeSet map[int][]Query, dryrun bool) error {
 
 	var txList []*sql.Tx
 
@@ -41,9 +41,16 @@ func ApplyChangeSet(changeSet map[int][]Query) error {
 
 	}
 
-	// TODO pop and rollback other transactions?
-	for _, tx := range txList {
-		tx.Commit()
+	if dryrun {
+		err = RevertChangeSet(txList)
+		if err != nil {
+			return fancy_errors.Wrap(err)
+		}
+	} else {
+		// TODO pop and rollback other transactions?
+		for _, tx := range txList {
+			tx.Commit()
+		}
 	}
 
 	return nil
