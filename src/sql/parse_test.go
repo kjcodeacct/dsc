@@ -24,7 +24,7 @@ WHERE text_d IS NOT NULL;
 
 func TestParser(t *testing.T) {
 
-	queryList, err := ParseDeus(testOne)
+	queryList, err := Parse(testOne)
 
 	for _, query := range queryList {
 		fmt.Println("Query:", query.Content)
@@ -35,7 +35,7 @@ func TestParser(t *testing.T) {
 
 	require.Nil(t, err)
 
-	queryList, err = ParseDeus(testTwo)
+	queryList, err = Parse(testTwo)
 
 	for _, query := range queryList {
 		fmt.Println("Query:", query.Content)

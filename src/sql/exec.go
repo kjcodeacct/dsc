@@ -42,7 +42,7 @@ func ApplyChangeSet(changeSet map[int][]Query, dryrun bool) error {
 	}
 
 	if dryrun {
-		err = RevertChangeSet(txList)
+		err := RevertChangeSet(txList)
 		if err != nil {
 			return fancy_errors.Wrap(err)
 		}

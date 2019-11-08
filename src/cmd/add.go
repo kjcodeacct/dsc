@@ -55,5 +55,5 @@ func init() {
 }
 
 func addFile(filePath string) error {
-
+	return nil
 }

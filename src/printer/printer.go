@@ -23,20 +23,24 @@ func init() {
 	}
 }
 
-func Red(args ...interface{}) {
-	fmt.Fprint(printWriter, aurora.Red(args))
+func Red(format string, args ...interface{}) {
+	output := fmt.Sprintf(format, args...)
+	fmt.Fprint(printWriter, aurora.Red(output))
 }
 
-func Blue(args ...interface{}) {
-	fmt.Fprint(printWriter, aurora.Blue(args))
+func Blue(format string, args ...interface{}) {
+	output := fmt.Sprintf(format, args...)
+	fmt.Fprint(printWriter, aurora.Blue(output))
 }
 
-func Yellow(args ...interface{}) {
-	fmt.Fprint(printWriter, aurora.Yellow(args))
+func Yellow(format string, args ...interface{}) {
+	output := fmt.Sprintf(format, args...)
+	fmt.Fprint(printWriter, aurora.Yellow(output))
 }
 
-func Green(args ...interface{}) {
-	fmt.Fprint(printWriter, aurora.Green(args))
+func Green(format string, args ...interface{}) {
+	output := fmt.Sprintf(format, args...)
+	fmt.Fprint(printWriter, aurora.Green(output))
 }
 
 func Fatalln(args ...interface{}) {
@@ -46,7 +50,7 @@ func Fatalln(args ...interface{}) {
 }
 
 func Printf(format string, args ...interface{}) {
-	fmt.Fprintf(printWriter, format, args)
+	fmt.Fprintf(printWriter, format, args...)
 }
 
 func Println(format string, args ...interface{}) {

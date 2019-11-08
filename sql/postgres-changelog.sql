@@ -21,7 +21,6 @@ CREATE TABLE dsc_change_file
 );
 
 CREATE UNIQUE INDEX ON dsc_change_files(file);
-
 CREATE UNIQUE INDEX ON dsc_change_files(file, sha256);
 
 CREATE TABLE dsc_temporal_log

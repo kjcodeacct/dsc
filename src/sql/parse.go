@@ -14,6 +14,7 @@ Query
 The query object contains the metadata used for executing and logging a query ran via DSC.
 */
 type Query struct {
+	Filename  string
 	Content   string
 	LineStart int
 	LineEnd   int
