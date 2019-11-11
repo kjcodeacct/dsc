@@ -16,7 +16,12 @@ limitations under the License.
 package cmd
 
 import (
+	"dsc/fancy_errors"
+	errors "dsc/fancy_errors"
+	"dsc/printer"
 	"fmt"
+	"os"
+	"path/filepath"
 
 	"github.com/spf13/cobra"
 )
@@ -33,10 +38,21 @@ Please see the docs for more information on adding files in order to apply chang
 
 		if len(args) > 1 {
 			// TODO prompt user to correctly order files
+			for _, filePath := range args {
+				err := addFile(filePath)
+				if err != nil {
+					printer.Fatalln(errors.Wrap(err).Error())
+				}
+			}
 		} else {
-
+			for _, filePath := range args {
+				err := addFile(filePath)
+				if err != nil {
+					printer.Fatalln(errors.Wrap(err).Error())
+				}
+			}
 		}
-		fmt.Println("add called")
+
 	},
 }
 
@@ -55,5 +71,47 @@ func init() {
 }
 
 func addFile(filePath string) error {
+
+	err := checkFile(filePath)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func checkFile(filePath string) error {
+
+	fileName := filePath
+
+	_, err := os.Stat(filePath)
+	if err != nil {
+
+		if os.IsNotExist(err) {
+
+			cwd, err := os.Getwd()
+			if err != nil {
+				return fancy_errors.Wrap(err)
+			}
+
+			filePath = filepath.Join(cwd, filePath)
+
+			_, err = os.Stat(filePath)
+			if err != nil {
+
+				if os.IsNotExist(err) {
+					errMsg := fmt.Sprintf("file '%s' does not exist", fileName)
+					return fancy_errors.New(errMsg)
+				} else {
+					return fancy_errors.Wrap(err)
+				}
+
+			}
+
+		} else {
+			return fancy_errors.Wrap(err)
+		}
+	}
+
 	return nil
 }

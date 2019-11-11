@@ -50,7 +50,7 @@ func InitializeWorkingDirectory() {
 	if workingDir == "" {
 		localDir, err := os.Getwd()
 		if err != nil {
-			printer.Fatalln(errors.Wrap(err))
+			printer.Fatalln(errors.Wrap(err).Error())
 		}
 
 		workingDir = localDir
@@ -60,7 +60,7 @@ func InitializeWorkingDirectory() {
 
 	err := createWorkingDirectory(workingDir)
 	if err != nil {
-		printer.Fatalln(errors.Wrap(err))
+		printer.Fatalln(errors.Wrap(err).Error())
 	}
 
 	printer.Println("initialized empty dsc working directory in %s", workingDir)
@@ -74,8 +74,9 @@ func createWorkingDirectory(workingDir string) error {
 		// copy dsc.db from internalPackageDir
 		_, err := os.Create("index.db")
 		if err != nil {
-			printer.Fatalln(errors.Wrap(err))
+			printer.Fatalln(errors.Wrap(err).Error())
 		}
+
 	} else {
 		return errors.New("dsc working directory already exsits")
 	}

@@ -43,10 +43,10 @@ func Green(format string, args ...interface{}) {
 	fmt.Fprint(printWriter, aurora.Green(output))
 }
 
-func Fatalln(args ...interface{}) {
-	args = append(args, newLine)
-	fmt.Fprint(printWriter, aurora.Red(args), newLine)
-	panic(args)
+func Fatalln(format string, args ...interface{}) {
+	output := fmt.Sprintf(format, args...)
+	fmt.Fprint(printWriter, aurora.Red(output))
+	panic(output)
 }
 
 func Printf(format string, args ...interface{}) {
