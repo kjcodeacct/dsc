@@ -20,6 +20,7 @@ import (
 	errors "dsc/fancy_errors"
 	"dsc/printer"
 	"fmt"
+	"io/ioutil"
 	"os"
 	"path/filepath"
 
@@ -59,15 +60,22 @@ Please see the docs for more information on adding files in order to apply chang
 func init() {
 	rootCmd.AddCommand(addCmd)
 
-	// Here you will define your flags and configuration settings.
+	err := loadFileList()
+	if err != nil {
+		printer.Fatalln(errors.Wrap(err).Error())
+	}
+}
 
-	// Cobra supports Persistent Flags which will work for this command
-	// and all subcommands, e.g.:
-	// addCmd.PersistentFlags().String("foo", "", "A help for foo")
+var preCommitFileList []string
 
-	// Cobra supports local flags which will only run when this command
-	// is called directly, e.g.:
-	// addCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
+func loadFileList() error {
+
+	dat, err := ioutil.ReadFile("/tmp/dat")
+	if err != nil {
+		return err
+	}
+
+	fmt.Print(string(dat))
 }
 
 func addFile(filePath string) error {
@@ -112,6 +120,10 @@ func checkFile(filePath string) error {
 			return fancy_errors.Wrap(err)
 		}
 	}
+
+	// if all of the previous checks passed the file exists
+
+	preCommitFileList = append(preCommitFileList, filePath)
 
 	return nil
 }
