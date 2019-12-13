@@ -1,32 +1,79 @@
 package editor
 
 import (
+	"dsc/config"
 	"dsc/fancy_errors"
+	"fmt"
 	"io/ioutil"
 	"os"
 	"os/exec"
+	"runtime"
 )
 
 const DefaultEditor = "vim"
 
-func OpenInEditor(filename string) error {
+func OpenInEditor(fileDir string) error {
 
-	editor := os.Getenv("EDITOR")
-	if editor == "" {
-		editor = DefaultEditor
-	}
-
-	executable, err := exec.LookPath(editor)
+	userConfig, err := config.Get()
 	if err != nil {
 		return err
 	}
 
-	cmd := exec.Command(executable, filename)
-	cmd.Stdin = os.Stdin
-	cmd.Stdout = os.Stdout
-	cmd.Stderr = os.Stderr
+	if runtime.GOOS == "windows" {
 
-	return cmd.Run()
+		var editor string
+		if userConfig.Editor != "" {
+			editor = userConfig.Editor
+		} else {
+			editor = os.Getenv("EDITOR")
+			if editor == "" {
+				editor = "Notepad"
+			}
+		}
+
+		runCmd := fmt.Sprintf(`%s "%s"`, editor, fileDir)
+		cmd := exec.Command(runCmd, fileDir)
+		cmd.Stdin = os.Stdin
+		cmd.Stdout = os.Stdout
+		cmd.Stderr = os.Stderr
+
+		err = cmd.Run()
+		if err != nil {
+			return fancy_errors.Wrap(err)
+		}
+
+	} else {
+
+		var editor string
+		if userConfig.Editor != "" {
+			editor = userConfig.Editor
+		} else {
+			editor = os.Getenv("EDITOR")
+			if editor == "" {
+				editor = DefaultEditor
+			} else {
+				execPath, err := exec.LookPath(editor)
+				if err != nil {
+					return fancy_errors.Wrap(err)
+				}
+
+				editor = execPath
+			}
+
+		}
+
+		cmd := exec.Command(editor, fileDir)
+		cmd.Stdin = os.Stdin
+		cmd.Stdout = os.Stdout
+		cmd.Stderr = os.Stderr
+
+		err = cmd.Run()
+		if err != nil {
+			return fancy_errors.Wrap(err)
+		}
+	}
+
+	return nil
 }
 
 func GetEditorInput() ([]byte, error) {
@@ -66,7 +113,7 @@ func GetEditorInput() ([]byte, error) {
 // 		to edit, and then returns the file with the edited changes
 func EditTemplate(data []byte) ([]byte, error) {
 
-	file, err := ioutil.TempFile(os.TempDir(), "*")
+	file, err := ioutil.TempFile(os.TempDir(), "dsc_")
 	if err != nil {
 		return data, fancy_errors.Wrap(err)
 	}

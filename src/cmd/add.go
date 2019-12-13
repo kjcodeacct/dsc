@@ -17,12 +17,12 @@ package cmd
 
 import (
 	"dsc/fancy_errors"
-	errors "dsc/fancy_errors"
 	"dsc/printer"
 	"fmt"
-	"io/ioutil"
+	"io"
 	"os"
 	"path/filepath"
+	"strings"
 
 	"github.com/spf13/cobra"
 )
@@ -36,22 +36,14 @@ Please see the docs for more information on adding files in order to apply chang
 `,
 	Run: func(cmd *cobra.Command, args []string) {
 		fmt.Println(args)
+		files, err := parseInput(args)
+		if err != nil {
+			printer.Fatalln(err.Error())
+		}
 
-		if len(args) > 1 {
-			// TODO prompt user to correctly order files
-			for _, filePath := range args {
-				err := addFile(filePath)
-				if err != nil {
-					printer.Fatalln(errors.Wrap(err).Error())
-				}
-			}
-		} else {
-			for _, filePath := range args {
-				err := addFile(filePath)
-				if err != nil {
-					printer.Fatalln(errors.Wrap(err).Error())
-				}
-			}
+		err = add(files)
+		if err != nil {
+			printer.Fatalln(err.Error())
 		}
 
 	},
@@ -59,71 +51,69 @@ Please see the docs for more information on adding files in order to apply chang
 
 func init() {
 	rootCmd.AddCommand(addCmd)
-
-	err := loadFileList()
-	if err != nil {
-		printer.Fatalln(errors.Wrap(err).Error())
-	}
 }
 
-var preCommitFileList []string
+func parseInput(argList []string) ([]string, error) {
 
-func loadFileList() error {
+	var fileDirList []string
 
-	dat, err := ioutil.ReadFile("/tmp/dat")
+	for _, arg := range argList {
+
+		checkDir := arg
+
+		if !strings.Contains(arg, workingDir) {
+			checkDir = filepath.Join(workingDir, checkDir)
+		}
+
+		_, err := os.Stat(checkDir)
+		if err != nil {
+
+			if os.IsNotExist(err) {
+				errMsg := fmt.Sprintf("%s is not in working sub directory", arg)
+				return nil, fancy_errors.New(errMsg)
+			}
+
+			return nil, err
+		}
+
+		fileDirList = append(fileDirList, arg)
+	}
+
+	return fileDirList, nil
+}
+
+func add(fileDirList []string) error {
+
+	addFilename := filepath.Join(workingDir, ".add")
+	var addFile *os.File
+	var err error
+
+	addFile, err = os.OpenFile(addFilename, os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644)
 	if err != nil {
 		return err
 	}
 
-	fmt.Print(string(dat))
-}
+	for _, fileDir := range fileDirList {
 
-func addFile(filePath string) error {
-
-	err := checkFile(filePath)
-	if err != nil {
-		return err
-	}
-
-	return nil
-}
-
-func checkFile(filePath string) error {
-
-	fileName := filePath
-
-	_, err := os.Stat(filePath)
-	if err != nil {
-
-		if os.IsNotExist(err) {
-
-			cwd, err := os.Getwd()
-			if err != nil {
-				return fancy_errors.Wrap(err)
-			}
-
-			filePath = filepath.Join(cwd, filePath)
-
-			_, err = os.Stat(filePath)
-			if err != nil {
-
-				if os.IsNotExist(err) {
-					errMsg := fmt.Sprintf("file '%s' does not exist", fileName)
-					return fancy_errors.New(errMsg)
-				} else {
-					return fancy_errors.Wrap(err)
-				}
-
-			}
-
-		} else {
-			return fancy_errors.Wrap(err)
+		_, err = io.WriteString(addFile, fileDir)
+		if err != nil {
+			return err
 		}
 	}
 
-	// if all of the previous checks passed the file exists
+	err = addFile.Sync()
+	if err != nil {
+		return err
+	}
 
-	preCommitFileList = append(preCommitFileList, filePath)
+	err = addFile.Close()
+	if err != nil {
+		return err
+	}
+
+	if len(fileDirList) > 0 {
+		fmt.Println("opening add file for re ordering")
+	}
 
 	return nil
 }
