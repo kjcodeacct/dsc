@@ -17,6 +17,7 @@ limitations under the License.
 package cmd
 
 import (
+	"dsc/editor"
 	errors "dsc/fancy_errors"
 	"dsc/printer"
 	"os"
@@ -64,6 +65,44 @@ func InitializeWorkingDirectory() {
 	}
 
 	printer.Println("initialized empty dsc working directory in %s", workingDir)
+
+	setupConfig := editor.PromptBool("do you want to setup a remote host")
+	if setupConfig {
+	}
+}
+
+const DefaultAlias = "default"
+
+func createAliases() error {
+
+	defaultSet := false
+
+	// aliasList := []config.Alias
+AliasPrompt:
+	for {
+
+		// host := editor.Prompt("hostname")
+		// port := editor.Prompt("port")
+
+		var isDefault bool
+		var alias string
+
+		if !defaultSet {
+			isDefault = editor.PromptBool("is this your default host")
+		}
+
+		if !isDefault {
+			alias = editor.Prompt("remote alias")
+			if alias == DefaultAlias && defaultSet {
+				printer.Red("default remote alias is already set, please reconfigure this host alias")
+				continue AliasPrompt
+			}
+		} else {
+			alias = DefaultAlias
+		}
+
+	}
+
 }
 
 func createWorkingDirectory(workingDir string) error {

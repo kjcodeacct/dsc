@@ -16,6 +16,7 @@ limitations under the License.
 package cmd
 
 import (
+	"dsc/editor"
 	"dsc/fancy_errors"
 	"dsc/printer"
 	"fmt"
@@ -30,8 +31,8 @@ import (
 // addCmd represents the add command
 var addCmd = &cobra.Command{
 	Use:   "add",
-	Short: "Add a file or files to be commited.",
-	Long: `'add' will add file(s) to be tracked and commited by dsc.
+	Short: "Add a file or files to be staged for commitment.",
+	Long: `'add' will stage file(s) to be tracked and commited by dsc.
 Please see the docs for more information on adding files in order to apply changes correctly.
 `,
 	Run: func(cmd *cobra.Command, args []string) {
@@ -111,8 +112,12 @@ func add(fileDirList []string) error {
 		return err
 	}
 
-	if len(fileDirList) > 0 {
-		fmt.Println("opening add file for re ordering")
+	if len(fileDirList) > 1 {
+		fmt.Println("opening staged file list for re ordering")
+		err = editor.OpenInEditor(addFilename)
+		if err != nil {
+			return fancy_errors.Wrap(err)
+		}
 	}
 
 	return nil
