@@ -5,9 +5,9 @@ import (
 )
 
 type Config struct {
-	Name   string `yaml:"name"`
-	Email  string `yaml:"Email"`
-	Editor string `yaml:"editor"`
+	Name   string `json:"name"`
+	Email  string `json:"Email"`
+	Editor string `json:"editor"`
 }
 
 func Get() (*Config, error) {
