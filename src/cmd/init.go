@@ -81,8 +81,8 @@ func createAliases() error {
 AliasPrompt:
 	for {
 
-		// host := editor.Prompt("hostname")
-		// port := editor.Prompt("port")
+		host := editor.Prompt("hostname")
+		port := editor.Prompt("port")
 
 		var isDefault bool
 		var alias string
