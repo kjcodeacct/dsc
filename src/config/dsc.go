@@ -1,7 +1,7 @@
 package config
 
 import (
-	"dsc/fancy_errors"
+	errors "dsc/fancy_errors"
 	"dsc/printer"
 	"os"
 	"path/filepath"
@@ -14,7 +14,7 @@ func findWorkingDir() (string, error) {
 
 	cwd, err := os.Getwd()
 	if err != nil {
-		return "", fancy_errors.Wrap(err)
+		return "", errors.Wrap(err)
 	}
 
 	workingDir := filepath.Join(cwd, WorkingDirDefault)
@@ -36,7 +36,7 @@ func findWorkingDir() (string, error) {
 						continue
 					} else {
 						printer.Println(err.Error())
-						return "", fancy_errors.New("not a dsc repository in this or any parent directories: .dsc")
+						return "", errors.New("not a dsc repository in this or any parent directories: .dsc")
 					}
 				}
 
@@ -45,7 +45,7 @@ func findWorkingDir() (string, error) {
 
 		} else {
 			printer.Println(err.Error())
-			return "", fancy_errors.New("not a dsc repository in this or any parent directories: .dsc")
+			return "", errors.New("not a dsc repository in this or any parent directories: .dsc")
 		}
 	}
 

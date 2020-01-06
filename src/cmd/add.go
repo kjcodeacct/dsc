@@ -17,7 +17,7 @@ package cmd
 
 import (
 	"dsc/editor"
-	"dsc/fancy_errors"
+	errors "dsc/fancy_errors"
 	"dsc/printer"
 	"fmt"
 	"io"
@@ -71,7 +71,7 @@ func parseInput(argList []string) ([]string, error) {
 
 			if os.IsNotExist(err) {
 				errMsg := fmt.Sprintf("%s is not in working sub directory", arg)
-				return nil, fancy_errors.New(errMsg)
+				return nil, errors.New(errMsg)
 			}
 
 			return nil, err
@@ -116,7 +116,7 @@ func add(fileDirList []string) error {
 		fmt.Println("opening staged file list for re ordering")
 		err = editor.OpenInEditor(addFilename)
 		if err != nil {
-			return fancy_errors.Wrap(err)
+			return errors.Wrap(err)
 		}
 	}
 

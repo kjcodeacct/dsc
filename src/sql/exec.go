@@ -2,7 +2,7 @@ package sql
 
 import (
 	"database/sql"
-	"dsc/fancy_errors"
+	errors "dsc/fancy_errors"
 	"time"
 )
 
@@ -18,10 +18,10 @@ func ApplyChangeSet(changeSet map[int][]Query, dryrun bool) error {
 		if err != nil {
 			err = RevertChangeSet(txList)
 			if err != nil {
-				return fancy_errors.Wrap(err)
+				return errors.Wrap(err)
 			}
 
-			return fancy_errors.Wrap(err)
+			return errors.Wrap(err)
 		}
 
 		txList = append(txList, incompleteTx)
@@ -32,10 +32,10 @@ func ApplyChangeSet(changeSet map[int][]Query, dryrun bool) error {
 
 				err = RevertChangeSet(txList)
 				if err != nil {
-					return fancy_errors.Wrap(err)
+					return errors.Wrap(err)
 				}
 
-				return fancy_errors.Wrap(err)
+				return errors.Wrap(err)
 			}
 		}
 
@@ -44,7 +44,7 @@ func ApplyChangeSet(changeSet map[int][]Query, dryrun bool) error {
 	if dryrun {
 		err := RevertChangeSet(txList)
 		if err != nil {
-			return fancy_errors.Wrap(err)
+			return errors.Wrap(err)
 		}
 	} else {
 		// TODO pop and rollback other transactions?
@@ -61,7 +61,7 @@ func RevertChangeSet(txList []*sql.Tx) error {
 	for _, tx := range txList {
 		err := tx.Rollback()
 		if err != nil {
-			return fancy_errors.Wrap(err)
+			return errors.Wrap(err)
 		}
 	}
 
@@ -74,7 +74,7 @@ func Exec(tx *sql.Tx, query Query) error {
 
 	_, err := tx.Exec(query.Content)
 	if err != nil {
-		return fancy_errors.Wrap(err)
+		return errors.Wrap(err)
 	}
 
 	query.EndTime = time.Now()

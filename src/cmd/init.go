@@ -67,6 +67,7 @@ func InitializeWorkingDirectory() {
 	printer.Println("initialized empty dsc working directory in %s", workingDir)
 
 	setupConfig := editor.PromptBool("do you want to setup a remote host")
+
 	if setupConfig {
 	}
 }
@@ -88,16 +89,20 @@ AliasPrompt:
 		var alias string
 
 		if !defaultSet {
+
 			isDefault = editor.PromptBool("is this your default host")
 		}
 
 		if !isDefault {
+
 			alias = editor.Prompt("remote alias")
 			if alias == DefaultAlias && defaultSet {
 				printer.Red("default remote alias is already set, please reconfigure this host alias")
 				continue AliasPrompt
 			}
+
 		} else {
+
 			alias = DefaultAlias
 		}
 
@@ -109,6 +114,7 @@ func createWorkingDirectory(workingDir string) error {
 
 	_, err := os.Stat(workingDir)
 	if os.IsNotExist(err) {
+
 		os.Mkdir(workingDir, 0644)
 		// copy dsc.db from internalPackageDir
 		_, err := os.Create("index.db")
@@ -117,6 +123,11 @@ func createWorkingDirectory(workingDir string) error {
 		}
 
 	} else {
+
+		if err != nil {
+			return errors.Wrap(err)
+		}
+
 		return errors.New("dsc working directory already exsits")
 	}
 

@@ -2,7 +2,7 @@ package sql
 
 import (
 	"database/sql"
-	"dsc/fancy_errors"
+	errors "dsc/fancy_errors"
 
 	_ "github.com/go-sql-driver/mysql"
 )
@@ -21,7 +21,7 @@ func Connect(config DbConfig) error {
 	case "mysql":
 		DbConnection, err = sql.Open("mysql", "user:password@/dbname")
 		if err != nil {
-			return fancy_errors.Wrap(err)
+			return errors.Wrap(err)
 		}
 
 		defer DbConnection.Close()
@@ -34,7 +34,7 @@ func getTx() (*sql.Tx, error) {
 
 	tx, err := DbConnection.Begin()
 	if err != nil {
-		return nil, fancy_errors.Wrap(err)
+		return nil, errors.Wrap(err)
 	}
 
 	return tx, nil
@@ -44,7 +44,7 @@ func completeTx(tx *sql.Tx) error {
 
 	err := tx.Commit()
 	if err != nil {
-		return fancy_errors.Wrap(err)
+		return errors.Wrap(err)
 	}
 
 	return err

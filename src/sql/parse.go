@@ -2,7 +2,7 @@ package sql
 
 import (
 	"bufio"
-	"dsc/fancy_errors"
+	errors "dsc/fancy_errors"
 	"strings"
 	"time"
 	"unicode"
@@ -127,7 +127,7 @@ func Parse(input string) ([]Query, error) {
 	}
 
 	if len(queryList) == 0 {
-		return nil, fancy_errors.New("no valid queries present in input")
+		return nil, errors.New("no valid queries present in input")
 	}
 
 	return queryList, nil

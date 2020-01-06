@@ -2,7 +2,7 @@ package editor
 
 import (
 	"dsc/config"
-	"dsc/fancy_errors"
+	errors "dsc/fancy_errors"
 	"fmt"
 	"io/ioutil"
 	"os"
@@ -39,7 +39,7 @@ func OpenInEditor(fileDir string) error {
 
 		err = cmd.Run()
 		if err != nil {
-			return fancy_errors.Wrap(err)
+			return errors.Wrap(err)
 		}
 
 	} else {
@@ -54,7 +54,7 @@ func OpenInEditor(fileDir string) error {
 			} else {
 				execPath, err := exec.LookPath(editor)
 				if err != nil {
-					return fancy_errors.Wrap(err)
+					return errors.Wrap(err)
 				}
 
 				editor = execPath
@@ -69,7 +69,7 @@ func OpenInEditor(fileDir string) error {
 
 		err = cmd.Run()
 		if err != nil {
-			return fancy_errors.Wrap(err)
+			return errors.Wrap(err)
 		}
 	}
 
@@ -82,7 +82,7 @@ func GetEditorInput() ([]byte, error) {
 
 	file, err := ioutil.TempFile(os.TempDir(), "*")
 	if err != nil {
-		return data, fancy_errors.Wrap(err)
+		return data, errors.Wrap(err)
 	}
 
 	filename := file.Name()
@@ -92,17 +92,17 @@ func GetEditorInput() ([]byte, error) {
 
 	err = file.Close()
 	if err != nil {
-		return data, fancy_errors.Wrap(err)
+		return data, errors.Wrap(err)
 	}
 
 	err = OpenInEditor(filename)
 	if err != nil {
-		return data, fancy_errors.Wrap(err)
+		return data, errors.Wrap(err)
 	}
 
 	data, err = ioutil.ReadFile(filename)
 	if err != nil {
-		return data, fancy_errors.Wrap(err)
+		return data, errors.Wrap(err)
 	}
 
 	return data, nil
@@ -115,14 +115,14 @@ func EditTemplate(data []byte) ([]byte, error) {
 
 	file, err := ioutil.TempFile(os.TempDir(), "dsc_")
 	if err != nil {
-		return data, fancy_errors.Wrap(err)
+		return data, errors.Wrap(err)
 	}
 
 	filename := file.Name()
 
 	err = ioutil.WriteFile(filename, data, 0644)
 	if err != nil {
-		return data, fancy_errors.Wrap(err)
+		return data, errors.Wrap(err)
 	}
 
 	// wait to remove file at completion of the read below
@@ -130,17 +130,17 @@ func EditTemplate(data []byte) ([]byte, error) {
 
 	err = file.Close()
 	if err != nil {
-		return data, fancy_errors.Wrap(err)
+		return data, errors.Wrap(err)
 	}
 
 	err = OpenInEditor(filename)
 	if err != nil {
-		return data, fancy_errors.Wrap(err)
+		return data, errors.Wrap(err)
 	}
 
 	data, err = ioutil.ReadFile(filename)
 	if err != nil {
-		return data, fancy_errors.Wrap(err)
+		return data, errors.Wrap(err)
 	}
 
 	return data, nil
