@@ -43,7 +43,20 @@ var workingDir string
 func init() {
 	rootCmd.AddCommand(initCmd)
 	initCmd.Flags().String("dir", "", "specify working directory ")
-	workingDir, _ = initCmd.Flags().GetString("dir")
+
+	checkWorkingDir, _ := initCmd.Flags().GetString("dir")
+
+	if checkWorkingDir != "" {
+		workingDir, _ = initCmd.Flags().GetString("dir")
+	} else {
+
+		cwd, err := os.Getwd()
+		if err != nil {
+			printer.Fatalln(errors.Wrap(err).Error())
+		}
+
+		workingDir = cwd
+	}
 }
 
 func InitializeWorkingDirectory() {

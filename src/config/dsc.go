@@ -10,7 +10,7 @@ import (
 
 const WorkingDirDefault = ".dsc"
 
-func findWorkingDir() (string, error) {
+func FindWorkingDir() (string, error) {
 
 	cwd, err := os.Getwd()
 	if err != nil {

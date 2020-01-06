@@ -16,6 +16,7 @@ limitations under the License.
 package cmd
 
 import (
+	"dsc/config"
 	"dsc/editor"
 	errors "dsc/fancy_errors"
 	"dsc/printer"
@@ -52,6 +53,8 @@ Please see the docs for more information on adding files in order to apply chang
 
 func init() {
 	rootCmd.AddCommand(addCmd)
+
+	workingDir, _ = config.FindWorkingDir()
 }
 
 func parseInput(argList []string) ([]string, error) {
