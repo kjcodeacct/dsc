@@ -1,6 +1,7 @@
 package config
 
 import (
+	"dsc/editor"
 	errors "dsc/fancy_errors"
 	"dsc/printer"
 	"os"
@@ -9,6 +10,9 @@ import (
 )
 
 const WorkingDirDefault = ".dsc"
+const DefaultAlias = "default"
+
+var ValidDbTypes = make(map[string][]string)
 
 func FindWorkingDir() (string, error) {
 
@@ -53,3 +57,79 @@ func FindWorkingDir() (string, error) {
 }
 
 // func checkParentDir(dir string) bool {}
+
+type DscConfig struct {
+	DbType     string      `json:"databaseType"`
+	Version    string      `json:"version"`
+	RemoteList []DscRemote `json:"remoteList"`
+}
+
+type DscRemote struct {
+	Host     string `json:"host"`
+	Port     string `json:"port"`
+	Alias    string `json:"alias"`
+	User     string `json:"user,omitempty"`
+	Password string `json:"password,omitempty"`
+}
+
+func CreateWorkingDir(workingDir string) error {
+
+	_, err := os.Stat(workingDir)
+	if os.IsNotExist(err) {
+
+		os.Mkdir(workingDir, 0644)
+		// copy dsc.db from internalPackageDir
+		_, err := os.Create("index.db")
+		if err != nil {
+			printer.Fatalln(errors.Wrap(err).Error())
+		}
+
+	} else {
+
+		if err != nil {
+			return errors.Wrap(err)
+		}
+
+		return errors.New("dsc working directory already exsits")
+	}
+
+	return nil
+}
+
+func PromptCreateRemote() error {
+
+	defaultSet := false
+
+	// aliasList := []config.Alias
+AliasPrompt:
+	for {
+
+		host := editor.Prompt("hostname")
+		port := editor.Prompt("port")
+
+		var isDefault bool
+		var alias string
+
+		if !defaultSet {
+
+			isDefault = editor.PromptBool("is this your default host")
+		}
+
+		if !isDefault {
+
+			alias = editor.Prompt("remote alias")
+			if alias == DefaultAlias && defaultSet {
+				printer.Red("default remote alias is already set, please reconfigure this host alias")
+				continue AliasPrompt
+			}
+
+		} else {
+
+			alias = DefaultAlias
+		}
+
+	}
+
+}
+
+func AddAlias(workingDir)

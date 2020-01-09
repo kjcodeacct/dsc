@@ -17,6 +17,7 @@ limitations under the License.
 package cmd
 
 import (
+	"dsc/config"
 	"dsc/editor"
 	errors "dsc/fancy_errors"
 	"dsc/printer"
@@ -72,7 +73,7 @@ func InitializeWorkingDirectory() {
 
 	workingDir = filepath.Join(workingDir, ".dsc")
 
-	err := createWorkingDirectory(workingDir)
+	err := config.CreateWorkingDir(workingDir)
 	if err != nil {
 		printer.Fatalln(errors.Wrap(err).Error())
 	}
@@ -87,7 +88,7 @@ func InitializeWorkingDirectory() {
 
 const DefaultAlias = "default"
 
-func createAliases() error {
+func PromptCreateRemote() error {
 
 	defaultSet := false
 
@@ -121,28 +122,4 @@ AliasPrompt:
 
 	}
 
-}
-
-func createWorkingDirectory(workingDir string) error {
-
-	_, err := os.Stat(workingDir)
-	if os.IsNotExist(err) {
-
-		os.Mkdir(workingDir, 0644)
-		// copy dsc.db from internalPackageDir
-		_, err := os.Create("index.db")
-		if err != nil {
-			printer.Fatalln(errors.Wrap(err).Error())
-		}
-
-	} else {
-
-		if err != nil {
-			return errors.Wrap(err)
-		}
-
-		return errors.New("dsc working directory already exsits")
-	}
-
-	return nil
 }

@@ -37,6 +37,9 @@ var addCmd = &cobra.Command{
 Please see the docs for more information on adding files in order to apply changes correctly.
 `,
 	Run: func(cmd *cobra.Command, args []string) {
+
+		workingDir, _ = config.FindWorkingDir()
+
 		fmt.Println(args)
 		files, err := parseInput(args)
 		if err != nil {
@@ -53,8 +56,6 @@ Please see the docs for more information on adding files in order to apply chang
 
 func init() {
 	rootCmd.AddCommand(addCmd)
-
-	workingDir, _ = config.FindWorkingDir()
 }
 
 func parseInput(argList []string) ([]string, error) {
