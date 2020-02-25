@@ -1,5 +1,7 @@
 package sql
 
+
+// 
 type DbConfig struct {
 	Type    string `json:"type"`
 	Version string `json:"version"`
