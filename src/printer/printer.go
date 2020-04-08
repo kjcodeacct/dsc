@@ -57,11 +57,3 @@ func Println(format string, args ...interface{}) {
 	args = append(args, newLine)
 	fmt.Fprintf(printWriter, format, args)
 }
-
-func AddedFiles(files []string) {
-
-}
-
-func RemovedFiles(files []string) {
-
-}

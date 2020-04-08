@@ -1,8 +1,8 @@
 package editor
 
 import (
-	"dsc/config"
 	errors "dsc/fancy_errors"
+	config "dsc/user_config"
 	"fmt"
 	"io/ioutil"
 	"os"

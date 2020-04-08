@@ -3,6 +3,9 @@ Fancy Errors
 
 This package wraps the errors used in dsc throughout with a stacktrace, but follows the
 	standard error package api, with the addition of the Cause method
+
+TODO determine if this should be in a seperate go repo altogether
+	(should anyone want it with the coloration)
 */
 
 package fancy_errors

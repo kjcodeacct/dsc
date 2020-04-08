@@ -1,22 +1,17 @@
 package config
 
-import (
-	_ "gopkg.in/yaml.v2"
-)
+// func checkParentDir(dir string) bool {}
 
-type Config struct {
-	Name   string `json:"name"`
-	Email  string `json:"Email"`
-	Editor string `json:"editor"`
+type DscConfig struct {
+	DbType     string      `json:"databaseType"`
+	Version    string      `json:"version"`
+	RemoteList []DscRemote `json:"remoteList"`
 }
 
-func Get() (*Config, error) {
-
-	newConfig := &Config{
-		Name:   "test",
-		Email:  "email@example.com",
-		Editor: "subl",
-	}
-
-	return newConfig, nil
+type DscRemote struct {
+	Host     string `json:"host"`
+	Port     string `json:"port"`
+	Alias    string `json:"alias"`
+	User     string `json:"user,omitempty"`
+	Password string `json:"password,omitempty"`
 }

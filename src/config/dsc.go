@@ -58,20 +58,6 @@ func FindWorkingDir() (string, error) {
 
 // func checkParentDir(dir string) bool {}
 
-type DscConfig struct {
-	DbType     string      `json:"databaseType"`
-	Version    string      `json:"version"`
-	RemoteList []DscRemote `json:"remoteList"`
-}
-
-type DscRemote struct {
-	Host     string `json:"host"`
-	Port     string `json:"port"`
-	Alias    string `json:"alias"`
-	User     string `json:"user,omitempty"`
-	Password string `json:"password,omitempty"`
-}
-
 func CreateWorkingDir(workingDir string) error {
 
 	_, err := os.Stat(workingDir)
@@ -132,4 +118,6 @@ AliasPrompt:
 
 }
 
-func AddAlias(workingDir)
+func AddAlias(workingDir string) error {
+
+}

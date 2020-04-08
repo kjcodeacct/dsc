@@ -25,6 +25,7 @@ func Connect(config DbConfig) error {
 		}
 
 		defer DbConnection.Close()
+
 	}
 
 	return nil

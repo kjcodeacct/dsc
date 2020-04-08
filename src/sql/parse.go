@@ -58,6 +58,7 @@ N1b
 N1c
 N1d;N2;N3;
 */
+
 func Parse(input string) ([]Query, error) {
 
 	scanner := bufio.NewScanner(strings.NewReader(input))
