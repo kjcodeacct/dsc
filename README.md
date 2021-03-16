@@ -15,6 +15,9 @@ schema and data changes against a database, or a list of databases.
 Currently it is not even alpha, and is being fleshed out for full features and capabilities.
 Please see issue tracking for future todo's and tasks in progress.
 
+TODO - reevaluate, if this is re-inventing the wheel (see <https://flywaydb.org/> or <https://github.com/dolthub/dolt>)
+  Possibly integrate with <https://github.com/rubenv/sql-migrate>
+
 # Issue Tracking
 [Issue Tracking & Milestones - kanban](https://trello.com/b/sb7YkvzH/dsc-version-10)
 
